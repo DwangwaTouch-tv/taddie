@@ -1,331 +1,644 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MY LOVE TADDIE</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShopPafupi – Seller Dashboard</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --brand:#0c447c;--brand-dk:#0c447c;--brand-lt:#e6f1fb;
+  --orange:#d85a30;--orange-lt:#faece7;
+  --green:#3b6d11;--green-lt:#eaf3de;--green-mid:#97c459;
+  --amber:#ba7517;--amber-lt:#faeeda;
+  --red:#a32d2d;--red-lt:#fcebeb;
+  --bg:#f5f4f0;--white:#fff;--border:#e0ded8;--border-mid:#ccc;
+  --text:#1a1a1a;--text-2:#666;--text-3:#999;
+  --radius:8px;--radius-lg:12px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:16px;line-height:1.6;min-height:100vh}
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+/* NAV */
+.topnav{background:var(--brand);padding:0 20px;height:75px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(24,95,165,.2)}
+.logo{color:#fff;font-size:18px;font-weight:700;letter-spacing:-.3px;user-select:none}
+.logo span{color:#fac775}
+.nav-r{display:flex;align-items:center;gap:10px}
+.notif-btn{position:relative;background:rgba(255,255,255,.15);border:none;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;transition:background .15s}
+.notif-btn:hover{background:rgba(255,255,255,.25)}
+.notif-btn i{font-size:17px}
+.notif-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;background:#ef9f27;border-radius:50%;border:1.5px solid var(--brand)}
+.avatar{width:34px;height:34px;border-radius:50%;background:#fac775;color:#633806;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
 
-  <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family:'Poppins', sans-serif;
-    }
+/* TABS */
+.tabs{background:var(--white);border-bottom:1px solid var(--border);padding:0 20px;display:flex;gap:0;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:13px 15px;font-size:15px;color:var(--text-2);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.tab:hover{color:var(--brand)}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+.tab-badge{background:var(--brand-lt);color:var(--brand);font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px}
 
-    body{
-      height:100vh;
-      overflow:hidden;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      background:linear-gradient(-45deg,#050505,#140010,#2b0018,#000000);
-      background-size:400% 400%;
-      animation:bgMove 12s ease infinite;
-      position:relative;
-    }
+/* MAIN */
+.main{max-width:880px;margin:0 auto;padding:20px 16px 60px;min-height:calc(100vh - 52px - 43px)}
 
-    @keyframes bgMove{
-      0%{background-position:0% 50%;}
-      50%{background-position:100% 50%;}
-      100%{background-position:0% 50%;}
-    }
+/* VIEWS */
+.view{display:none}
+.view.on{display:block}
 
-    /* Floating Background Text */
-    .bg-text{
-      position:absolute;
-      width:100%;
-      height:100%;
-      overflow:hidden;
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:center;
-      align-items:center;
-      opacity:0.06;
-      pointer-events:none;
-      z-index:1;
-    }
+/* STAT CARDS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.stat{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px}
+.stat-lbl{font-size:13px;color:var(--text-2);margin-bottom:6px;display:flex;align-items:center;gap:5px;text-transform:uppercase;letter-spacing:.4px;font-weight:600}
+.stat-lbl i{font-size:14px}
+.stat-val{font-size:28px;font-weight:700;color:var(--text)}
+.stat-sub{font-size:13px;color:var(--text-3);margin-top:3px;display:flex;align-items:center;gap:3px}
+.up{color:var(--green)}
 
-    .bg-text span{
-      color:#ff4d88;
-      font-size:30px;
-      font-weight:700;
-      margin:12px;
-      animation:floatText 8s linear infinite;
-      text-shadow:0 0 15px #ff0055;
-    }
+/* SECTION HEADER */
+.sec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:8px;flex-wrap:wrap}
+.sec-title{font-size:17px;font-weight:700}
 
-    @keyframes floatText{
-      0%{
-        transform:translateY(0px);
-      }
-      50%{
-        transform:translateY(-15px);
-      }
-      100%{
-        transform:translateY(0px);
-      }
-    }
+/* TOOLBAR */
+.toolbar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.search-wrap{flex:1;min-width:180px;display:flex;align-items:center;gap:8px;background:var(--white);border:1px solid var(--border-mid);border-radius:var(--radius);padding:0 12px;transition:border-color .15s,box-shadow .15s}
+.search-wrap:focus-within{border-color:var(--brand);box-shadow:0 0 0 3px rgba(24,95,165,.1)}
+.search-wrap i{font-size:15px;color:var(--text-3);flex-shrink:0}
+.search-wrap input{border:none;background:transparent;outline:none;font-size:15px;color:var(--text);flex:1;padding:11px 0;font-family:inherit}
+.filter-select{background:var(--white);border:1px solid var(--border-mid);border-radius:var(--radius);padding:0 28px 0 11px;font-size:15px;color:var(--text);font-family:inherit;cursor:pointer;height:44px;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;transition:border-color .15s}
+.filter-select:focus{border-color:var(--brand);outline:none}
 
-    /* Center Container */
-    .container{
-      position:relative;
-      z-index:10;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      flex-direction:column;
-    }
+/* PRODUCT CARDS */
+.products{display:flex;flex-direction:column;gap:10px}
+.prod-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px;display:flex;align-items:flex-start;gap:14px;transition:box-shadow .15s,border-color .15s}
+.prod-card:hover{box-shadow:0 2px 12px rgba(0,0,0,.07);border-color:var(--border-mid)}
+.prod-img{width:72px;height:72px;border-radius:var(--radius);background:#f0efeb;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;position:relative;cursor:pointer}
+.prod-img i{font-size:28px;color:var(--text-3)}
+.prod-img img{width:100%;height:100%;object-fit:cover}
+.prod-img-overlay{position:absolute;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s;border-radius:var(--radius)}
+.prod-img:hover .prod-img-overlay{opacity:1}
+.prod-img-overlay i{font-size:18px;color:#fff}
+.prod-body{flex:1;min-width:0}
+.prod-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px}
+.prod-name{font-size:15px;font-weight:600;line-height:1.4;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.prod-actions{display:flex;gap:4px;flex-shrink:0}
+.icon-btn{width:30px;height:30px;border-radius:var(--radius);border:1px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-2);transition:all .15s}
+.icon-btn:hover{background:#f5f4f0;border-color:var(--border-mid)}
+.icon-btn.del:hover{color:var(--red);border-color:#f7c1c1;background:var(--red-lt)}
+.icon-btn i{font-size:14px}
+.prod-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.badge{padding:4px 9px;border-radius:4px;font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:3px}
+.badge-live{background:var(--green-lt);color:var(--green)}
+.badge-draft{background:#f5f4f0;color:var(--text-2)}
+.badge-review{background:var(--amber-lt);color:var(--amber)}
+.prod-price{font-size:15px;font-weight:700;color:var(--orange)}
+.prod-moq{font-size:13px;color:var(--text-3)}
+.prod-stats{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap}
+.prod-stat{font-size:13px;color:var(--text-2);display:flex;align-items:center;gap:4px}
+.prod-stat i{font-size:13px}
 
-    /* Main Heart */
-    .heart{
-      position:relative;
-      width:180px;
-      height:180px;
-      background:linear-gradient(145deg,#ff003c,#ff4d6d);
-      transform:rotate(-45deg);
-      animation:heartbeat 1s infinite;
-      box-shadow:
-        0 0 25px #ff004c,
-        0 0 60px #ff004c,
-        0 0 120px #ff004c;
-    }
+/* ADD CARD */
+.add-card{background:var(--white);border:1.5px dashed var(--border-mid);border-radius:var(--radius-lg);padding:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:all .15s;text-align:center;margin-top:10px}
+.add-card:hover{border-color:var(--brand);background:var(--brand-lt)}
+.add-card i{font-size:28px;color:var(--text-3)}
+.add-card:hover i{color:var(--brand)}
+.add-card p{font-size:13px;color:var(--text-2)}
+.add-card:hover p{color:var(--brand-dk)}
 
-    .heart::before,
-    .heart::after{
-      content:'';
-      position:absolute;
-      width:180px;
-      height:180px;
-      background:linear-gradient(145deg,#ff003c,#ff4d6d);
-      border-radius:50%;
-    }
+/* FORM CARDS */
+.form-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;margin-bottom:12px}
+.form-card-title{font-size:16px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.form-card-title i{font-size:16px;color:var(--brand)}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.field:last-child{margin-bottom:0}
+.field label{font-size:14px;color:var(--text-2);font-weight:600}
+.req{color:var(--red)}
+.field input,.field select,.field textarea{font-family:inherit;font-size:15px;border:1px solid var(--border-mid);border-radius:var(--radius);padding:11px 13px;background:var(--white);color:var(--text);outline:none;transition:border-color .15s,box-shadow .15s;width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(24,95,165,.1)}
+.field input::placeholder,.field textarea::placeholder{color:var(--text-3)}
+.field textarea{min-height:90px;resize:vertical;line-height:1.6}
+.field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;cursor:pointer}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
 
-    .heart::before{
-      top:-90px;
-      left:0;
-    }
+/* PHONE INPUT */
+.phone-wrap{display:flex;gap:0;border:1px solid var(--border-mid);border-radius:var(--radius);overflow:hidden;transition:border-color .15s,box-shadow .15s}
+.phone-wrap:focus-within{border-color:var(--brand);box-shadow:0 0 0 3px rgba(24,95,165,.1)}
+.phone-prefix{display:flex;align-items:center;gap:6px;padding:0 11px;background:#f5f4f0;border-right:1px solid var(--border-mid);font-size:15px;color:var(--text-2);font-weight:600;white-space:nowrap;flex-shrink:0;user-select:none}
+.phone-prefix i{font-size:14px;color:var(--text-3)}
+.phone-wrap input{border:none!important;border-radius:0!important;box-shadow:none!important;flex:1;min-width:0}
+.phone-wrap input:focus{border:none!important;box-shadow:none!important}
+.phone-hint{font-size:12px;color:var(--text-3);margin-top:4px;display:flex;align-items:center;gap:4px}
+.phone-hint i{font-size:12px;color:var(--text-3)}
 
-    .heart::after{
-      left:90px;
-      top:0;
-    }
+/* IMAGE UPLOAD */
+.img-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.img-slot{aspect-ratio:1;border:1.5px dashed var(--border-mid);border-radius:var(--radius);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;transition:all .15s;background:#f5f4f0;font-size:11px;color:var(--text-3);position:relative;overflow:hidden}
+.img-slot:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-lt)}
+.img-slot.main-slot{border-style:solid;border-color:var(--brand)}
+.img-slot.has-img{border-style:solid;border-color:var(--border);background:#f0f0f0}
+.img-slot i{font-size:20px}
+.main-lbl{font-size:9px;font-weight:700;background:var(--brand);color:#fff;padding:2px 7px;border-radius:3px;position:absolute;top:5px;left:5px;z-index:2}
+.slot-img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.slot-del{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.5);border:none;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:opacity .15s;z-index:3}
+.img-slot.has-img:hover .slot-del{opacity:1}
+.slot-del i{font-size:12px;color:#fff}
+.hidden-file{display:none}
+.img-hint{font-size:13px;color:var(--text-3);margin-top:8px;line-height:1.5}
 
-    @keyframes heartbeat{
-      0%{
-        transform:rotate(-45deg) scale(1);
-      }
-      25%{
-        transform:rotate(-45deg) scale(1.1);
-      }
-      50%{
-        transform:rotate(-45deg) scale(1);
-      }
-      75%{
-        transform:rotate(-45deg) scale(1.18);
-      }
-      100%{
-        transform:rotate(-45deg) scale(1);
-      }
-    }
+/* BAR CHART */
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.bar-label{font-size:14px;color:var(--text-2);width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex-shrink:0}
+.bar-track{flex:1;background:#f0efeb;border-radius:3px;height:8px;overflow:hidden}
+.bar-fill{background:var(--brand);height:100%;border-radius:3px;transition:width .5s ease}
+.bar-val{font-size:14px;color:var(--text);font-weight:600;min-width:50px;text-align:right;flex-shrink:0}
 
-    /* Glowing Ring */
-    .ring{
-      position:absolute;
-      width:350px;
-      height:350px;
-      border:2px solid rgba(255,255,255,0.08);
-      border-radius:50%;
-      animation:rotateRing 10s linear infinite;
-      box-shadow:0 0 40px rgba(255,0,100,0.3);
-    }
+/* NOTIFICATIONS */
+.notif-item{display:flex;gap:12px;padding:14px;background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:8px;align-items:flex-start}
+.notif-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.notif-icon i{font-size:16px}
+.ni-green{background:var(--green-lt)}
+.ni-green i{color:var(--green)}
+.ni-amber{background:var(--amber-lt)}
+.ni-amber i{color:var(--amber)}
+.ni-blue{background:var(--brand-lt)}
+.ni-blue i{color:var(--brand)}
+.ni-gray{background:#f5f4f0}
+.ni-gray i{color:var(--text-3)}
+.notif-body{flex:1;min-width:0}
+.notif-body p{font-size:15px;line-height:1.5;margin-bottom:3px}
+.notif-time{font-size:13px;color:var(--text-3)}
+.notif-unread{width:8px;height:8px;background:var(--brand);border-radius:50%;flex-shrink:0;margin-top:6px}
 
-    @keyframes rotateRing{
-      from{
-        transform:rotate(0deg);
-      }
-      to{
-        transform:rotate(360deg);
-      }
-    }
+/* BUTTONS */
+.btn{padding:10px 16px;font-size:15px;border-radius:var(--radius);cursor:pointer;border:1px solid var(--border-mid);background:var(--white);color:var(--text);font-family:inherit;font-weight:500;display:inline-flex;align-items:center;gap:6px;transition:all .15s;white-space:nowrap}
+.btn:hover{background:#f5f4f0}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+.btn-primary:hover{background:var(--brand-dk)}
+.btn-sm{padding:7px 12px;font-size:13px}
+.form-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)}
 
-    /* Love Message */
-    .message{
-      position:absolute;
-      text-align:center;
-      color:white;
-      font-size:42px;
-      font-weight:700;
-      letter-spacing:3px;
-      text-shadow:
-        0 0 10px #ff4d88,
-        0 0 20px #ff4d88,
-        0 0 40px #ff0055;
-      animation:glowText 2s infinite alternate;
-      z-index:20;
-    }
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:16px;background:#1a1a1a;color:#fff;padding:10px 16px;border-radius:var(--radius);font-size:13px;font-weight:500;z-index:9999;opacity:0;transform:translateY(6px);transition:all .2s;pointer-events:none;display:flex;align-items:center;gap:8px;max-width:320px;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.ok{background:#27500a}
+.toast i{font-size:15px;flex-shrink:0}
 
-    @keyframes glowText{
-      from{
-        opacity:0.8;
-      }
-      to{
-        opacity:1;
-        transform:scale(1.03);
-      }
-    }
+/* DIVIDER */
+.divider{height:1px;background:var(--border);margin:14px 0}
 
-    /* Floating Hearts */
-    .small-heart{
-      position:absolute;
-      color:#ff4d88;
-      font-size:20px;
-      animation:rise linear infinite;
-      opacity:0.8;
-    }
-
-    @keyframes rise{
-      0%{
-        transform:translateY(100vh) scale(0.5);
-        opacity:0;
-      }
-      20%{
-        opacity:1;
-      }
-      100%{
-        transform:translateY(-120vh) scale(1.4);
-        opacity:0;
-      }
-    }
-
-    /* Sparkles */
-    .spark{
-      position:absolute;
-      width:4px;
-      height:4px;
-      background:white;
-      border-radius:50%;
-      box-shadow:0 0 15px white;
-      animation:twinkle 2s infinite alternate;
-    }
-
-    @keyframes twinkle{
-      from{
-        opacity:0.2;
-        transform:scale(1);
-      }
-      to{
-        opacity:1;
-        transform:scale(2);
-      }
-    }
-
-    @media(max-width:768px){
-      .message{
-        font-size:28px;
-      }
-
-      .heart,
-      .heart::before,
-      .heart::after{
-        width:130px;
-        height:130px;
-      }
-
-      .heart::before{
-        top:-65px;
-      }
-
-      .heart::after{
-        left:65px;
-      }
-
-      .ring{
-        width:260px;
-        height:260px;
-      }
-    }
-
-  </style>
+/* RESPONSIVE */
+@media(max-width:768px){
+  .stats{grid-template-columns:1fr 1fr}
+  .row3{grid-template-columns:1fr}
+  .img-grid{grid-template-columns:repeat(3,1fr)}
+  .topnav{padding:0 14px}
+  .main{padding:14px 12px 60px}
+}
+@media(max-width:480px){
+  .stats{grid-template-columns:1fr 1fr}
+  .row2{grid-template-columns:1fr}
+  .prod-stat{display:none}
+  .img-grid{grid-template-columns:repeat(3,1fr)}
+  .tab{padding:12px 10px;font-size:12px}
+}
+@media(max-width:360px){
+  .stats{grid-template-columns:1fr}
+}
+</style>
 </head>
-
 <body>
 
-  <!-- Background Text -->
-  <div class="bg-text" id="bgText"></div>
+<div class="toast" id="toast"></div>
 
-  <!-- Sparkles -->
-  <div id="sparkContainer"></div>
+<!-- TOP NAV -->
+<nav class="topnav">
+  <div class="logo">ShopPafupi<span>.com</span></div>
+  <div class="nav-r">
+    <button class="notif-btn" onclick="showView('notif')" title="Notifications" aria-label="Notifications">
+      <i class="ti ti-bell"></i>
+      <!-- notif-dot: show/hide based on unread count from backend -->
+      <span class="notif-dot" id="notif-dot"></span>
+    </button>
+    <!-- avatar: populate initials and seller name from backend -->
+    <div class="avatar" id="seller-avatar" title="Profile"></div>
+  </div>
+</nav>
 
-  <!-- Floating Hearts -->
-  <div id="heartsContainer"></div>
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab on" id="tab-overview" onclick="showView('overview')"><i class="ti ti-layout-dashboard"></i> Overview</div>
+  <div class="tab" id="tab-products" onclick="showView('products')"><i class="ti ti-package"></i> My Products</div>
+  <div class="tab" id="tab-post" onclick="showView('post')"><i class="ti ti-plus"></i> Post Product</div>
+  <!-- notif-count: update text content with unread count from backend -->
+  <div class="tab" id="tab-notif" onclick="showView('notif')"><i class="ti ti-bell"></i> Notifications <span class="tab-badge" id="notif-count">0</span></div>
+</div>
 
-  <!-- Main Content -->
-  <div class="container">
+<div class="main">
 
-    <div class="ring"></div>
-
-    <div class="heart"></div>
-
-    <div class="message">
-      ❤️ I LOVE YOU TADDIE ❤️
+  <!-- ── OVERVIEW ── -->
+  <div class="view on" id="view-overview">
+    <div class="stats">
+      <!-- stat-total-views: populate stat-val and stat-sub from backend -->
+      <div class="stat" id="stat-total-views">
+        <div class="stat-lbl"><i class="ti ti-eye"></i> Total Views</div>
+        <div class="stat-val" id="val-total-views">—</div>
+        <div class="stat-sub" id="sub-total-views"></div>
+      </div>
+      <!-- stat-listings: populate counts per status from backend -->
+      <div class="stat" id="stat-listings">
+        <div class="stat-lbl"><i class="ti ti-package"></i> Listings</div>
+        <div class="stat-val" id="val-listings">—</div>
+        <div class="stat-sub" id="sub-listings"></div>
+      </div>
+      <!-- stat-inquiries: populate from backend -->
+      <div class="stat" id="stat-inquiries">
+        <div class="stat-lbl"><i class="ti ti-message-circle"></i> Inquiries</div>
+        <div class="stat-val" id="val-inquiries">—</div>
+        <div class="stat-sub" id="sub-inquiries"></div>
+      </div>
+      <!-- stat-favourites: populate from backend -->
+      <div class="stat" id="stat-favourites">
+        <div class="stat-lbl"><i class="ti ti-heart"></i> Favourites</div>
+        <div class="stat-val" id="val-favourites">—</div>
+        <div class="stat-sub" id="sub-favourites"></div>
+      </div>
     </div>
+
+    <div class="sec-hd">
+      <span class="sec-title">Recent Listings</span>
+      <button class="btn btn-sm" onclick="showView('products')"><i class="ti ti-list"></i> View all</button>
+    </div>
+    <!-- recent-list: render product cards from backend (most recent 3) -->
+    <div class="products" id="recent-list"></div>
+
+    <div class="form-card" style="margin-top:16px">
+      <div class="form-card-title"><i class="ti ti-chart-bar"></i> Views by product</div>
+      <!-- bar-chart: render bar rows from backend views data -->
+      <div id="bar-chart"></div>
+    </div>
+  </div>
+
+  <!-- ── MY PRODUCTS ── -->
+  <div class="view" id="view-products">
+    <div class="toolbar">
+      <div class="search-wrap">
+        <i class="ti ti-search"></i>
+        <!-- search input: wire oninput to backend search/filter handler -->
+        <input type="text" id="product-search" placeholder="Search products..." oninput="filterProducts(this.value)">
+      </div>
+      <!-- status-filter: wire onchange to backend filter handler -->
+      <select class="filter-select" id="status-filter" onchange="filterByStatus(this.value)">
+        <option value="all">All status</option>
+        <option value="live">Live</option>
+        <option value="draft">Draft</option>
+        <option value="review">In review</option>
+      </select>
+      <button class="btn btn-primary" onclick="showView('post')"><i class="ti ti-plus"></i> Add Product</button>
+    </div>
+    <!-- all-products: render all product cards from backend -->
+    <div class="products" id="all-products"></div>
+    <div class="add-card" onclick="showView('post')">
+      <i class="ti ti-camera-plus"></i>
+      <p>Add a new product listing</p>
+    </div>
+  </div>
+
+  <!-- ── POST PRODUCT ── -->
+  <div class="view" id="view-post">
+
+    <div class="form-card">
+      <div class="form-card-title"><i class="ti ti-category"></i> Category</div>
+      <div class="row3">
+        <div class="field">
+          <label>Main category <span class="req">*</span></label>
+          <!-- main-category: populate options from backend categories API -->
+          <select id="main-category" onchange="onMainCategoryChange(this.value)">
+            <option value="">Select category</option>
+            <option>Electronics</option>
+            <option>Apparel &amp; Clothing</option>
+            <option>Home &amp; Garden</option>
+            <option>Beauty &amp; Personal Care</option>
+            <option>Machinery</option>
+            <option>Food &amp; Agriculture</option>
+          </select>
+        </div>
+        
+        
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div class="form-card-title"><i class="ti ti-file-description"></i> Product information</div>
+      <div class="field">
+        <label>Product title <span class="req">*</span></label>
+        <input type="text" id="new-title" placeholder="e.g. OEM Wireless Earbuds Bluetooth 5.3 ANC 30H Playtime">
+      </div>
+      <div class="field">
+        <label>Description</label>
+        <textarea id="new-desc" placeholder="Describe your product — key features, materials, customization options..."></textarea>
+      </div>
+      <div class="row3">
+        <div class="field">
+          <label>Price (MWK) <span class="req">*</span></label>
+          <input type="number" id="new-price" placeholder="0.00" min="0" step="0.01">
+        </div>
+        <div class="field">
+          <label>Min. order qty <span class="req">*</span></label>
+          <input type="number" id="new-moq" placeholder="1" min="1">
+        </div>
+        <div class="field">
+          <label>Price type</label>
+          <!-- price-type: send value with form submission -->
+          <select id="price-type">
+            <option value="fixed">Fixed price</option>
+            <option value="negotiable">Negotiable</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div class="form-card-title"><i class="ti ti-photo"></i> Product images</div>
+      <p style="font-size:12px;color:var(--text-2);margin-bottom:12px">Tap any slot to choose a photo from your device. The first slot is your main image.</p>
+
+      <!-- Hidden file inputs — one per slot; wire onchange to upload handler -->
+      <input type="file" id="file-0" class="hidden-file" accept="image/*" onchange="loadSlotImage(0,this)">
+      <input type="file" id="file-1" class="hidden-file" accept="image/*" onchange="loadSlotImage(1,this)">
+      <input type="file" id="file-2" class="hidden-file" accept="image/*" onchange="loadSlotImage(2,this)">
+      <input type="file" id="file-3" class="hidden-file" accept="image/*" onchange="loadSlotImage(3,this)">
+
+      <div class="img-grid">
+        <!-- slot-0: main product image -->
+        <div class="img-slot main-slot" id="slot-0" onclick="triggerFile(0)">
+          <div class="main-lbl">Main</div>
+          <i class="ti ti-camera-plus"></i>
+          <span>Add photo</span>
+        </div>
+        <!-- slot-1 to slot-3: additional product images -->
+        <div class="img-slot" id="slot-1" onclick="triggerFile(1)">
+          <i class="ti ti-plus"></i><span>Add</span>
+        </div>
+        <div class="img-slot" id="slot-2" onclick="triggerFile(2)">
+          <i class="ti ti-plus"></i><span>Add</span>
+        </div>
+        <div class="img-slot" id="slot-3" onclick="triggerFile(3)">
+          <i class="ti ti-plus"></i><span>Add</span>
+        </div>
+      </div>
+      <p class="img-hint">JPG / PNG · Max 5MB per image · Up to 4 images. First image appears as the main product photo.</p>
+    </div>
+
+    <div class="form-card">
+      <div class="form-card-title"><i class="ti ti-map-pin"></i> Visibility &amp; listing settings</div>
+      <div class="row2">
+        <div class="field">
+          <label>Location</label>
+          <!-- listing-location: populate options from backend regions API -->
+          <select id="listing-location">
+            <option value="all">Malawi (All Regions)</option>
+            <option value="lilongwe">Lilongwe</option>
+            <option value="blantyre">Blantyre</option>
+            <option value="mzuzu">Mzuzu</option>
+            <option value="zomba">Zomba</option>
+            <option value="nkhotakota">Nkhotakota</option>
+            <option value="nkhata-bay">Nkhata Bay</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Listing duration</label>
+          <!-- listing-duration: send value with form submission -->
+          <select id="listing-duration">
+            <option value="0">No expiry (Recommended)</option>
+            <option value="30">30 Days</option>
+            <option value="60">60 Days</option>
+            <option value="90">90 Days</option>
+            <option value="180">6 Months</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- contact-number: send value with form submission -->
+      <div class="field" style="margin-top:4px">
+        <label>Contact number <span class="req">*</span></label>
+        <div class="phone-wrap">
+          <div class="phone-prefix"><i class="ti ti-phone"></i> +265</div>
+          <input
+            type="tel"
+            id="listing-contact"
+            placeholder="e.g. 999 123 456"
+            maxlength="12"
+            inputmode="tel"
+            autocomplete="tel-national"
+            oninput="this.value=this.value.replace(/[^0-9 ]/g,'')"
+          >
+        </div>
+        <span class="phone-hint"><i class="ti ti-info-circle"></i> Buyers will use this number to reach you about this listing.</span>
+      </div>
+    </div>
+
+    <div class="form-footer">
+      <!-- saveDraft / submitProduct: wire to backend API calls -->
+      <button class="btn" onclick="saveDraft()"><i class="ti ti-device-floppy"></i> Save draft</button>
+      <button class="btn btn-primary" onclick="submitProduct()"><i class="ti ti-send"></i> Submit &amp; Publish</button>
+    </div>
+  </div>
+
+  <!-- ── NOTIFICATIONS ── -->
+  <div class="view" id="view-notif">
+    <div class="sec-hd" style="margin-bottom:14px">
+      <span class="sec-title">Notifications</span>
+      <!-- markAllRead: wire to backend mark-all-read API call -->
+      <button class="btn btn-sm" onclick="markAllRead()"><i class="ti ti-checks"></i> Mark all read</button>
+    </div>
+
+    <!--
+      notif-list: render notification items from backend.
+      Each item should have:
+        - id="notif-{id}" on the wrapper div
+        - id="dot-{id}" on the unread dot span
+      Use the existing .notif-item structure and icon colour classes:
+        ni-green, ni-amber, ni-blue, ni-gray
+      Dim read notifications with opacity:.55 and omit the dot element.
+    -->
+    <div id="notif-list"></div>
 
   </div>
 
-  <script>
+</div><!-- /main -->
 
-    /* Background Repeated Text */
-    const bg = document.getElementById("bgText");
+<script>
+// ── TAB / VIEW SWITCHING ──────────────────────────────
+// Pure UI — no backend dependency.
+const viewIds = ['overview','products','post','notif'];
+function showView(name){
+  viewIds.forEach(v=>{
+    document.getElementById('view-'+v).classList.toggle('on', v===name);
+    document.getElementById('tab-'+v).classList.toggle('on', v===name);
+  });
+}
 
-    for(let i = 0; i < 250; i++){
-      let span = document.createElement("span");
-      span.innerText = "I LOVE YOU TADDIE";
-      bg.appendChild(span);
-    }
+// ── TOAST ─────────────────────────────────────────────
+// Pure UI helper — call toast(msg, 'ok') for success, toast(msg, '') for info/error.
+let _toastTimer;
+function toast(msg, type){
+  const el = document.getElementById('toast');
+  el.innerHTML = (type==='ok')
+    ? `<i class="ti ti-circle-check"></i> ${msg}`
+    : `<i class="ti ti-info-circle"></i> ${msg}`;
+  el.className = 'toast show' + (type==='ok' ? ' ok' : '');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(()=>el.classList.remove('show'), 2800);
+}
 
-    /* Floating Hearts Generator */
-    const heartsContainer = document.getElementById("heartsContainer");
+// ── IMAGE UPLOAD (UI only — file selection & preview) ─
+// loadSlotImage previews the selected file locally.
+// Wire the actual upload (FormData / multipart) to your backend inside loadSlotImage.
+function triggerFile(idx){
+  document.getElementById('file-'+idx).click();
+}
+function loadSlotImage(idx, input){
+  const file = input.files[0];
+  if(!file) return;
+  if(file.size > 5*1024*1024){ toast('Image is too large. Max 5MB.', ''); return; }
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const slot = document.getElementById('slot-'+idx);
+    const isMain = idx === 0;
+    slot.classList.add('has-img');
+    slot.innerHTML = `
+      <img class="slot-img" src="${e.target.result}" alt="Product image ${idx+1}">
+      ${isMain ? '<div class="main-lbl">Main</div>' : ''}
+      <button class="slot-del" title="Remove image" onclick="removeSlotImage(event,${idx})"><i class="ti ti-x"></i></button>
+    `;
+    // TODO: upload file to backend here
+  };
+  reader.readAsDataURL(file);
+}
+function removeSlotImage(event, idx){
+  event.stopPropagation();
+  const slot = document.getElementById('slot-'+idx);
+  const isMain = idx === 0;
+  slot.classList.remove('has-img');
+  slot.innerHTML = isMain
+    ? `<div class="main-lbl">Main</div><i class="ti ti-camera-plus"></i><span>Add photo</span>`
+    : `<i class="ti ti-plus"></i><span>Add</span>`;
+  slot.onclick = ()=>triggerFile(idx);
+  document.getElementById('file-'+idx).value = '';
+  // TODO: notify backend to remove this image slot if already uploaded
+}
 
-    function createHeart(){
-      const heart = document.createElement("div");
-      heart.classList.add("small-heart");
+// ── STUBS — wire these to your backend ───────────────
 
-      heart.innerHTML = "❤";
+/** Called when the main category dropdown changes. Fetch sub-categories from backend. */
+function onMainCategoryChange(value){
+  // TODO: fetch sub-categories for `value` and repopulate #sub-category
+}
 
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.animationDuration = (4 + Math.random() * 6) + "s";
-      heart.style.fontSize = (15 + Math.random() * 35) + "px";
+/** Called when the sub-category dropdown changes. Fetch product types from backend. */
+function onSubCategoryChange(value){
+  // TODO: fetch product types for `value` and repopulate #product-type
+}
 
-      heartsContainer.appendChild(heart);
+/** Collect form fields and POST to backend as draft. */
+function saveDraft(){
+  const payload = collectPostForm();
+  // TODO: POST payload to backend save-draft endpoint
+}
 
-      setTimeout(()=>{
-        heart.remove();
-      },10000);
-    }
+/** Validate required fields, then POST to backend for review/publish. */
+function submitProduct(){
+  const title   = document.getElementById('new-title').value.trim();
+  const price   = document.getElementById('new-price').value.trim();
+  const moq     = document.getElementById('new-moq').value.trim();
+  const contact = document.getElementById('listing-contact').value.trim();
+  if(!title)  { toast('Please enter a product title', ''); return; }
+  if(!price)  { toast('Please enter a price', ''); return; }
+  if(!moq)    { toast('Please enter minimum order quantity', ''); return; }
+  if(!contact){ toast('Please enter a contact number', ''); return; }
+  const payload = collectPostForm();
+  // TODO: POST payload to backend submit/publish endpoint
+}
 
-    setInterval(createHeart,250);
+/** Returns all post-product form values as a plain object. */
+function collectPostForm(){
+  return {
+    mainCategory:    document.getElementById('main-category').value,
+    subCategory:     document.getElementById('sub-category').value,
+    productType:     document.getElementById('product-type').value,
+    title:           document.getElementById('new-title').value.trim(),
+    description:     document.getElementById('new-desc').value.trim(),
+    price:           document.getElementById('new-price').value,
+    moq:             document.getElementById('new-moq').value,
+    priceType:       document.getElementById('price-type').value,
+    location:        document.getElementById('listing-location').value,
+    listingDuration: document.getElementById('listing-duration').value,
+    contactNumber:   '+265' + document.getElementById('listing-contact').value.trim(),
+    // images: collect from backend upload responses for slot-0..slot-3
+  };
+}
 
-    /* Sparkles Generator */
-    const sparkContainer = document.getElementById("sparkContainer");
+/** Filter product cards by search query. Expects backend to have rendered cards into #all-products. */
+function filterProducts(q){
+  document.querySelectorAll('#all-products .prod-card').forEach(c=>{
+    const n = c.querySelector('.prod-name').textContent.toLowerCase();
+    c.style.display = n.includes(q.toLowerCase()) ? 'flex' : 'none';
+  });
+  // TODO: alternatively, call backend search endpoint and re-render #all-products
+}
 
-    for(let i = 0; i < 120; i++){
+/** Filter product cards by status. */
+function filterByStatus(s){
+  document.querySelectorAll('#all-products .prod-card').forEach(c=>{
+    const badge = c.querySelector('.badge').textContent.toLowerCase();
+    c.style.display = (s==='all' || badge.includes(s)) ? 'flex' : 'none';
+  });
+  // TODO: alternatively, call backend filter endpoint and re-render #all-products
+}
 
-      const spark = document.createElement("div");
-      spark.classList.add("spark");
+/** Called when edit button is clicked on a product card. */
+function editProd(id){
+  // TODO: load product data by `id` from backend and populate post-product form, then showView('post')
+}
 
-      spark.style.left = Math.random() * 100 + "vw";
-      spark.style.top = Math.random() * 100 + "vh";
+/** Called when share button is clicked on a product card. */
+function shareProd(id){
+  const url = 'https://shoppafupi.com/listing/'+id;
+  if(navigator.clipboard){ navigator.clipboard.writeText(url).then(()=>toast('Link copied to clipboard', 'ok')); }
+  else toast('Link: '+url, '');
+}
 
-      spark.style.animationDuration =
-        (1 + Math.random() * 3) + "s";
+/** Called when delete button is clicked on a product card. */
+function deleteProd(id){
+  if(!confirm('Delete this product? This cannot be undone.')) return;
+  // TODO: DELETE request to backend for product `id`
+  // On success, remove the card from the DOM:
+  const el = document.getElementById('prod-'+id);
+  if(el){ el.style.transition='opacity .2s,transform .2s'; el.style.opacity='0'; el.style.transform='scale(.97)'; setTimeout(()=>el.remove(), 200); }
+  toast('Product deleted', '');
+}
 
-      sparkContainer.appendChild(spark);
-    }
+/** Mark all notifications as read. */
+function markAllRead(){
+  // TODO: POST to backend mark-all-read endpoint, then:
+  document.getElementById('notif-dot').style.display = 'none';
+  document.getElementById('notif-count').textContent = '0';
+  toast('All notifications marked as read', 'ok');
+}
 
-  </script>
-
+// ── INIT ──────────────────────────────────────────────
+// TODO: on page load, fetch from backend and populate:
+//   - #seller-avatar (initials + title)
+//   - #val-total-views, #sub-total-views
+//   - #val-listings, #sub-listings
+//   - #val-inquiries, #sub-inquiries
+//   - #val-favourites, #sub-favourites
+//   - #recent-list (first 3 product cards)
+//   - #all-products (all product cards)
+//   - #bar-chart (views bar rows)
+//   - #notif-list (notification items)
+//   - #notif-dot visibility and #notif-count text
+</script>
 </body>
 </html>
